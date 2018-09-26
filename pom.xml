@@ -3,13 +3,15 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.coveo</groupId>
-    <artifactId>spring-boot-parameter-store-integration</artifactId>
-    <version>1.0.0</version>
+    <groupId>tga.aws</groupId>
+    <artifactId>spring-boot-parameter-store-loader</artifactId>
+    <version>0.1.SNAPSHOT</version>
 
-    <name>Spring Boot Parameter Store Integration</name>
-    <description>An integration of Amazon Web Services' Systems Manager Parameter Store for Spring Boot's properties injection.</description>
-    <url>https://github.com/coveo/spring-boot-parameter-store-integration</url>
+    <name>AWS Parameter Store to Spring Boot Property Loader</name>
+    <description>
+        Transparent Integration of the AWS "Parameter Store" with your Spring Boot application.
+    </description>
+    <url>https://github.com/gtukmachev/spring-boot-parameter-store-loader</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,27 +26,24 @@
 
     <developers>
         <developer>
-            <name>Frederic Boutin</name>
-            <organization>Coveo</organization>
-            <organizationUrl>https://github.com/coveo</organizationUrl>
+            <name>Grigory Tukmachev</name>
+            <organization>gtukmachev</organization>
+            <organizationUrl>https://github.com/gtukmachev</organizationUrl>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:coveo/spring-boot-parameter-store-integration.git</connection>
-        <developerConnection>scm:git:git@github.com:coveo/spring-boot-parameter-store-integration.git</developerConnection>
-        <url>http://github.com/coveo/spring-boot-parameter-store-integration</url>
+        <connection>scm:git:git@github.com:gtukmachev/spring-boot-parameter-store-loader.git</connection>
+        <developerConnection>scm:git:git@github.com:gtukmachev/spring-boot-parameter-store-loader.git</developerConnection>
+        <url>https://github.com/gtukmachev/spring-boot-parameter-store-loader</url>
     </scm>
-
-    <!-- <dependencyManagement> <dependencies> <dependency> <groupId>org.springframework.boot</groupId> 
-        <artifactId>spring-boot-dependencies</artifactId> <version>1.5.14.RELEASE</version> 
-        <type>pom</type> <scope>import</scope> </dependency> </dependencies> </dependencyManagement> -->
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
             <version>2.0.2.RELEASE</version>
+            <!--<scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -60,6 +59,15 @@
         </dependency>
 
         <!-- Test libraries -->
+<!--
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>2.0.2.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -77,22 +85,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>net.revelc.code.formatter</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-                <version>2.7.3</version>
-                <configuration>
-                    <configFile>${project.basedir}/src/main/resources/code-formatter.xml</configFile>
-                    <lineEnding>LF</lineEnding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -119,40 +111,6 @@
             </plugin>
         </plugins>
 
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            net.revelc.code.formatter
-                                        </groupId>
-                                        <artifactId>
-                                            formatter-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [2.7.2,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>format</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
     <profiles>
@@ -169,31 +127,6 @@
                                 <id>attach-javadocs</id>
                                 <goals>
                                     <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.8</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
                                 </goals>
                             </execution>
                         </executions>
