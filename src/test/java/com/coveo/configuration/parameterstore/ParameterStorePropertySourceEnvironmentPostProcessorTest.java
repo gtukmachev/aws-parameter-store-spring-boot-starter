@@ -37,6 +37,7 @@ public class ParameterStorePropertySourceEnvironmentPostProcessorTest
         when(configurableEnvironmentMock.getProperty(PARAMETER_STORE_ENABLED_CONFIGURATION_PROPERTY,
                                                      Boolean.class,
                                                      Boolean.FALSE)).thenReturn(Boolean.FALSE);
+        when(configurableEnvironmentMock.getProperty(PARAMETER_STORE_ROOTS_PROPERTY, String.class, "")).thenReturn("common");
         when(configurableEnvironmentMock.getPropertySources()).thenReturn(mutablePropertySourcesMock);
 
         System.setProperty(ACCESS_KEY_ENV_VAR, "id");

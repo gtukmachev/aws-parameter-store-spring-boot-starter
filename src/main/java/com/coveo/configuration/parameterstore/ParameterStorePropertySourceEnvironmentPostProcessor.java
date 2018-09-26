@@ -12,6 +12,7 @@ public class ParameterStorePropertySourceEnvironmentPostProcessor implements Env
 
     static final String PARAMETER_STORE_ACCEPTED_PROFILES_CONFIGURATION_PROPERTY = "awsParameterStorePropertySource.enabledProfiles";
     static final String PARAMETER_STORE_ENABLED_CONFIGURATION_PROPERTY = "awsParameterStorePropertySource.enabled";
+    static final String PARAMETER_STORE_ROOTS_PROPERTY = "awsParameterStorePropertySource.roots";
 
     private static final String PARAMETER_STORE_PROPERTY_SOURCE_NAME = "AWSParameterStorePropertySource";
 
@@ -21,12 +22,17 @@ public class ParameterStorePropertySourceEnvironmentPostProcessor implements Env
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)
     {
         if (!initialized && isParameterStorePropertySourceEnabled(environment)) {
+            String[] roots = environment.getProperty(PARAMETER_STORE_ROOTS_PROPERTY, String.class, "")
+                    .split(",");
+
             environment.getPropertySources()
-                    .addFirst(new ParameterStorePropertySource(
-                            PARAMETER_STORE_PROPERTY_SOURCE_NAME,
-                            new ParameterStoreSource(AWSSimpleSystemsManagementClientBuilder.defaultClient()),
-                            new String[]{"common", "app"}
-                            ));
+                    .addFirst(
+                            new ParameterStorePropertySource(
+                                    PARAMETER_STORE_PROPERTY_SOURCE_NAME,
+                                    new ParameterStoreSource(AWSSimpleSystemsManagementClientBuilder.defaultClient()),
+                                    roots
+                            )
+                    );
             initialized = true;
         }
     }
