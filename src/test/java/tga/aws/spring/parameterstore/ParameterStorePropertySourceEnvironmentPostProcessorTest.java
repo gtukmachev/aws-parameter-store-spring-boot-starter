@@ -1,4 +1,4 @@
-package com.coveo.configuration.parameterstore;
+package tga.aws.spring.parameterstore;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,9 +10,9 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 
 import static com.amazonaws.SDKGlobalConfiguration.*;
-import static com.coveo.configuration.parameterstore.ParameterStorePropertySourceEnvironmentPostProcessor.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static tga.aws.spring.parameterstore.ParameterStorePropertySourceEnvironmentPostProcessor.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParameterStorePropertySourceEnvironmentPostProcessorTest

@@ -1,4 +1,4 @@
-package com.coveo.configuration.parameterstore;
+package tga.aws.spring.parameterstore;
 
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;
 import org.springframework.boot.SpringApplication;

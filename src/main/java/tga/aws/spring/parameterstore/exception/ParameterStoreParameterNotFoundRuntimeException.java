@@ -1,4 +1,4 @@
-package com.coveo.configuration.parameterstore.exception;
+package tga.aws.spring.parameterstore.exception;
 
 public class ParameterStoreParameterNotFoundRuntimeException extends RuntimeException
 {

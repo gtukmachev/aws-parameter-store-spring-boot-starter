@@ -1,4 +1,4 @@
-package com.coveo.configuration.parameterstore;
+package tga.aws.spring.parameterstore;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
