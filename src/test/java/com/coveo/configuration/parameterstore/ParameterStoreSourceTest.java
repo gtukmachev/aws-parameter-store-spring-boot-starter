@@ -1,22 +1,21 @@
 package com.coveo.configuration.parameterstore;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
+import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest;
+import com.amazonaws.services.simplesystemsmanagement.model.GetParameterResult;
+import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
+import com.amazonaws.services.simplesystemsmanagement.model.ParameterNotFoundException;
+import com.coveo.configuration.parameterstore.exception.ParameterStoreRuntimeException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
-import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest;
-import com.amazonaws.services.simplesystemsmanagement.model.GetParameterResult;
-import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
-import com.amazonaws.services.simplesystemsmanagement.model.ParameterNotFoundException;
-import com.coveo.configuration.parameterstore.exception.ParameterStoreParameterNotFoundRuntimeException;
-import com.coveo.configuration.parameterstore.exception.ParameterStoreRuntimeException;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParameterStoreSourceTest
@@ -34,7 +33,7 @@ public class ParameterStoreSourceTest
     @Before
     public void setUp()
     {
-        parameterStoreSource = new ParameterStoreSource(ssmClientMock, true);
+        parameterStoreSource = new ParameterStoreSource(ssmClientMock);
     }
 
     @Test
@@ -63,15 +62,6 @@ public class ParameterStoreSourceTest
         when(ssmClientMock.getParameter(getParameterRequest(VALID_PROPERTY_NAME))).thenThrow(new RuntimeException());
 
         parameterStoreSource.getProperty(VALID_PROPERTY_NAME);
-    }
-
-    @Test(expected = ParameterStoreParameterNotFoundRuntimeException.class)
-    public void shouldThrowOnGetPropertyWhenNotFoundAndHaltBootIsTrue()
-    {
-        when(ssmClientMock.getParameter(getParameterRequest(INVALID_PROPERTY_NAME))).thenThrow(new ParameterNotFoundException(""));
-        ParameterStoreSource parameterStoreSourceHaltingBoot = new ParameterStoreSource(ssmClientMock, false);
-
-        parameterStoreSourceHaltingBoot.getProperty(INVALID_PROPERTY_NAME);
     }
 
     private GetParameterRequest getParameterRequest(String parameterName)

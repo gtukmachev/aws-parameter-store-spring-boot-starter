@@ -1,7 +1,5 @@
 package com.coveo.configuration.parameterstore.exception;
 
-import com.coveo.configuration.parameterstore.ParameterStorePropertySource;
-
 public class ParameterStoreParameterNotFoundRuntimeException extends RuntimeException
 {
     private static final long serialVersionUID = 1L;

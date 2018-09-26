@@ -12,7 +12,6 @@ public class ParameterStorePropertySourceEnvironmentPostProcessor implements Env
 
     static final String PARAMETER_STORE_ACCEPTED_PROFILES_CONFIGURATION_PROPERTY = "awsParameterStorePropertySource.enabledProfiles";
     static final String PARAMETER_STORE_ENABLED_CONFIGURATION_PROPERTY = "awsParameterStorePropertySource.enabled";
-    static final String PARAMETER_STORE_IGNORE_MISSED_CONFIGURATION_PROPERTY = "awsParameterStorePropertySource.ignoreMissed";
 
     private static final String PARAMETER_STORE_PROPERTY_SOURCE_NAME = "AWSParameterStorePropertySource";
 
@@ -25,10 +24,7 @@ public class ParameterStorePropertySourceEnvironmentPostProcessor implements Env
             environment.getPropertySources()
                     .addFirst(new ParameterStorePropertySource(
                             PARAMETER_STORE_PROPERTY_SOURCE_NAME,
-                            new ParameterStoreSource(AWSSimpleSystemsManagementClientBuilder.defaultClient(),
-                                    environment.getProperty(PARAMETER_STORE_IGNORE_MISSED_CONFIGURATION_PROPERTY,
-                                            Boolean.class,
-                                            Boolean.TRUE)),
+                            new ParameterStoreSource(AWSSimpleSystemsManagementClientBuilder.defaultClient()),
                             new String[]{"common", "app"}
                             ));
             initialized = true;

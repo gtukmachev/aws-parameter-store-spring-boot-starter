@@ -1,10 +1,5 @@
 package com.coveo.configuration.parameterstore;
 
-import static com.amazonaws.SDKGlobalConfiguration.*;
-import static com.coveo.configuration.parameterstore.ParameterStorePropertySourceEnvironmentPostProcessor.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +8,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
+
+import static com.amazonaws.SDKGlobalConfiguration.*;
+import static com.coveo.configuration.parameterstore.ParameterStorePropertySourceEnvironmentPostProcessor.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParameterStorePropertySourceEnvironmentPostProcessorTest
@@ -37,9 +37,6 @@ public class ParameterStorePropertySourceEnvironmentPostProcessorTest
         when(configurableEnvironmentMock.getProperty(PARAMETER_STORE_ENABLED_CONFIGURATION_PROPERTY,
                                                      Boolean.class,
                                                      Boolean.FALSE)).thenReturn(Boolean.FALSE);
-        when(configurableEnvironmentMock.getProperty(PARAMETER_STORE_IGNORE_MISSED_CONFIGURATION_PROPERTY,
-                                                     Boolean.class,
-                                                     Boolean.TRUE)).thenReturn(Boolean.TRUE );
         when(configurableEnvironmentMock.getPropertySources()).thenReturn(mutablePropertySourcesMock);
 
         System.setProperty(ACCESS_KEY_ENV_VAR, "id");
