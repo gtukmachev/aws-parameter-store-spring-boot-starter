@@ -9,22 +9,20 @@ import com.coveo.configuration.parameterstore.exception.ParameterStoreRuntimeExc
 public class ParameterStoreSource
 {
     private AWSSimpleSystemsManagement ssmClient;
-    private boolean haltBoot;
+    private boolean ignoreMissed;
 
-    public ParameterStoreSource(AWSSimpleSystemsManagement ssmClient, boolean haltBoot)
-    {
+    public ParameterStoreSource(AWSSimpleSystemsManagement ssmClient, boolean ignoreMissed) {
         this.ssmClient = ssmClient;
-        this.haltBoot = haltBoot;
+        this.ignoreMissed = ignoreMissed;
     }
 
-    public Object getProperty(String propertyName)
-    {
+    public Object getProperty(String propertyName) {
         try {
             return ssmClient.getParameter(new GetParameterRequest().withName(propertyName).withWithDecryption(true))
                             .getParameter()
                             .getValue();
         } catch (ParameterNotFoundException e) {
-            if (haltBoot) {
+            if (!ignoreMissed) {
                 throw new ParameterStoreParameterNotFoundRuntimeException(propertyName, e);
             }
         } catch (Exception e) {

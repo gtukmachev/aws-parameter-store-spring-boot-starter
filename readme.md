@@ -69,7 +69,7 @@ When Spring Boot encounters your environment variable, it doesn't inject `${/my/
 
 The default behaviour of a PropertySource when it can't find a property is to return `null`, and then the PropertyResolver iterates on every other PropertySource to find a matching value. This is the default behaviour for this lib.
 
-If you want to halt the boot when a property prefixed with `/` isn't found in the Parameter Store, just set `awsParameterStorePropertySource.haltBoot` to `true` in your properties. We personally use this to prevent injecting default properties in a production environment.
+If you want to halt the boot when a property prefixed with `/` isn't found in the Parameter Store, just set `awsParameterStorePropertySource.ignoreMissed` to `true` in your properties. We personally use this to prevent injecting default properties in a production environment.
 
 ## Spring Cloud
 

@@ -1,22 +1,49 @@
 package com.coveo.configuration.parameterstore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.PropertySource;
 
-public class ParameterStorePropertySource extends PropertySource<ParameterStoreSource>
-{
-    public static final String PARAMETER_STORE_HIERARCHY_SPLIT_CHARACTER = "/";
+import java.util.HashMap;
+import java.util.Map;
 
-    public ParameterStorePropertySource(String name, ParameterStoreSource source)
-    {
+public class ParameterStorePropertySource extends PropertySource<ParameterStoreSource> {
+
+    private final static Logger logger = LoggerFactory.getLogger(ParameterStorePropertySource.class);
+
+    private final Map<String, Object> cache = new HashMap<>();
+    private final String MISSED_VALUE = "!<NULL>";
+
+    private final String[] rootSsnFolders;
+
+
+    public ParameterStorePropertySource(String name, ParameterStoreSource source, String[] rootSsnFolders) {
         super(name, source);
+        this.rootSsnFolders = rootSsnFolders;
     }
 
     @Override
-    public Object getProperty(String name)
-    {
-        if (name.startsWith(PARAMETER_STORE_HIERARCHY_SPLIT_CHARACTER)) {
-            return source.getProperty(name);
-        }
-        return null;
+    public Object getProperty(String name) {
+
+        Object value = cache.computeIfAbsent(name, name_ -> {
+            String key = "/" + name_.replace(".", "/");
+
+            for (String folder : rootSsnFolders) {
+                String ssnKey = folder + key;
+                Object possibleValue = source.getProperty(ssnKey);
+                if (possibleValue != null) {
+                    logger.info("AWS Parameter Store loaded: '{\"property\": \"{}\", \"key\" = \"{}\", \"value\" = \"{}\"}"
+                            , name_
+                            , ssnKey
+                            , possibleValue
+                    );
+                    return possibleValue;
+                }
+            }
+
+            return MISSED_VALUE;
+        });
+
+        return value == MISSED_VALUE ? null : value;
     }
 }

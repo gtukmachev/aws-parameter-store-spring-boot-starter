@@ -34,7 +34,7 @@ public class ParameterStoreSourceTest
     @Before
     public void setUp()
     {
-        parameterStoreSource = new ParameterStoreSource(ssmClientMock, false);
+        parameterStoreSource = new ParameterStoreSource(ssmClientMock, true);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ParameterStoreSourceTest
     public void shouldThrowOnGetPropertyWhenNotFoundAndHaltBootIsTrue()
     {
         when(ssmClientMock.getParameter(getParameterRequest(INVALID_PROPERTY_NAME))).thenThrow(new ParameterNotFoundException(""));
-        ParameterStoreSource parameterStoreSourceHaltingBoot = new ParameterStoreSource(ssmClientMock, true);
+        ParameterStoreSource parameterStoreSourceHaltingBoot = new ParameterStoreSource(ssmClientMock, false);
 
         parameterStoreSourceHaltingBoot.getProperty(INVALID_PROPERTY_NAME);
     }
