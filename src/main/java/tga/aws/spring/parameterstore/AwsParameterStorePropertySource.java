@@ -7,9 +7,9 @@ import org.springframework.core.env.PropertySource;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParameterStorePropertySource extends PropertySource<ParameterStoreSource> {
+public class AwsParameterStorePropertySource extends PropertySource<AwsParameterStoreSource> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ParameterStorePropertySource.class);
+    private final static Logger logger = LoggerFactory.getLogger(AwsParameterStorePropertySource.class);
 
     private final Map<String, Object> cache = new HashMap<>();
     private final String MISSED_VALUE = "!<NULL>";
@@ -17,7 +17,7 @@ public class ParameterStorePropertySource extends PropertySource<ParameterStoreS
     private final String[] rootSsnFolders;
 
 
-    public ParameterStorePropertySource(String name, ParameterStoreSource source, String[] rootSsnFolders) {
+    public AwsParameterStorePropertySource(String name, AwsParameterStoreSource source, String[] rootSsnFolders) {
         super(name, source);
         this.rootSsnFolders = rootSsnFolders;
     }

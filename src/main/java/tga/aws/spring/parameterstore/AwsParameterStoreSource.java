@@ -3,13 +3,12 @@ package tga.aws.spring.parameterstore;
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest;
 import com.amazonaws.services.simplesystemsmanagement.model.ParameterNotFoundException;
-import tga.aws.spring.parameterstore.exception.ParameterStoreRuntimeException;
+import tga.aws.spring.parameterstore.exception.AwsParameterStoreConnectorException;
 
-public class ParameterStoreSource
-{
+public class AwsParameterStoreSource {
     private AWSSimpleSystemsManagement ssmClient;
 
-    public ParameterStoreSource(AWSSimpleSystemsManagement ssmClient) {
+    public AwsParameterStoreSource(AWSSimpleSystemsManagement ssmClient) {
         this.ssmClient = ssmClient;
     }
 
@@ -21,7 +20,7 @@ public class ParameterStoreSource
         } catch (ParameterNotFoundException e) {
             return null;
         } catch (Exception e) {
-            throw new ParameterStoreRuntimeException(propertyName, e);
+            throw new AwsParameterStoreConnectorException(propertyName, e);
         }
     }
 }
