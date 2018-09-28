@@ -18,7 +18,7 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
      * <p>List of spring profiles (comma separated). If one of these profiles is active - the AWS Property Source Connector will be activated</p>
      * <p>use ANY profile name to activate it for all profiles (or !xxx)</p>
      */
-    static final String pName_AcceptedSpringProfiles = "psSpringProfiles";
+    static public final String pName_AcceptedSpringProfiles = "psSpringProfiles";
 
     /**
      * <p>A list of comma separated root folders inside AWS Parameter Store</p>
@@ -33,7 +33,7 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
      *     <li>/common/server/port <i>(if /app/server/port is undefined)</i></li>
      * </ul>
      */
-    static final String pName_Roots                  = "psSpringProfiles.roots";
+    static public final String pName_Roots                  = "psSpringProfiles.roots";
 
     static boolean initialized;
 
