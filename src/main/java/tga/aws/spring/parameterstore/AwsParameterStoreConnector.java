@@ -1,7 +1,6 @@
 package tga.aws.spring.parameterstore;
 
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
-import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathResult;
 import org.slf4j.Logger;
@@ -12,7 +11,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
 
-    static final Logger logger = LoggerFactory.getLogger(AwsParameterStoreConnector.class);
+    static private final Logger logger = LoggerFactory.getLogger(AwsParameterStoreConnector.class);
 
     /**
      * <p>List of spring profiles (comma separated). If one of these profiles is active - the AWS Property Source Connector will be activated</p>
@@ -36,6 +35,8 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
     static public final String pName_Roots                  = "psSpringProfiles.roots";
 
     static boolean initialized;
+
+    private AWSParameterStoreClientBuilder awsParameterStoreClientBuilder = new AWSParameterStoreClientBuilder();
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)
@@ -64,7 +65,7 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
     }
 
     private AWSSimpleSystemsManagement buildAwsClient(String[] roots, ConfigurableEnvironment environment) {
-        AWSSimpleSystemsManagement client = AWSSimpleSystemsManagementClientBuilder.defaultClient();
+        AWSSimpleSystemsManagement client = getAwsParameterStoreClientBuilder().getClient();
 
         try {
             // AWS Connection checking: trying to read properties from the specified roots
@@ -101,5 +102,13 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
 
         String[] profiles = userDefinedEnabledProfiles.split(",");
         return environment.acceptsProfiles(profiles);
+    }
+
+    public AWSParameterStoreClientBuilder getAwsParameterStoreClientBuilder() {
+        return awsParameterStoreClientBuilder;
+    }
+
+    public void setAwsParameterStoreClientBuilder(AWSParameterStoreClientBuilder awsParameterStoreClientBuilder) {
+        this.awsParameterStoreClientBuilder = awsParameterStoreClientBuilder;
     }
 }
