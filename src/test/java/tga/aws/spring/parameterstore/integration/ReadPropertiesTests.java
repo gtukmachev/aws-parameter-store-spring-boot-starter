@@ -8,6 +8,7 @@ import com.amazonaws.services.simplesystemsmanagement.model.PutParameterRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +18,7 @@ import org.springframework.core.env.PropertySource;
 import tga.aws.spring.parameterstore.AwsParameterStoreConnector;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -26,19 +28,21 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ReadPropertiesTests {
 
-    @Mock SpringApplication springApplication;
-    @Mock ConfigurableEnvironment environment;
+    @Mock private SpringApplication springApplication;
+    @Mock private ConfigurableEnvironment environment;
+    @Mock private MutablePropertySources mutablePropertySources;
 
-    AwsParameterStoreConnector connector;
-    MutablePropertySources mutablePropertySources;
-    PropertySource<?> propertySource;
+    private PropertySource<?> propertySource;
+    private AWSSimpleSystemsManagement store;
 
     @Before
     public void prepareEnvironment(){
-        // Spring Application Mock
-        this.mutablePropertySources = new MutablePropertySources();
+        store = AWSSimpleSystemsManagementClientBuilder.defaultClient();
+
         when( environment.getPropertySources() )
                 .thenReturn(mutablePropertySources);
+
+        ArgumentCaptor valueCapture = ArgumentCaptor.forClass(PropertySource.class);
 
         // we going to read properties from '/testqwe' and then from '/commonqwe' root folders
         when( environment.getProperty(AwsParameterStoreConnector.pName_Roots, String.class, "") )
@@ -62,16 +66,24 @@ public class ReadPropertiesTests {
     }
 
     @Test public void readParameterFromFirstRootFolder() {
-        AWSSimpleSystemsManagement store = AWSSimpleSystemsManagementClientBuilder.defaultClient();
-
-        withParameter(store, "/commonqwe/server/port", "8090", () -> {
-            String value = (String) propertySource.getProperty("server.port");
-            assertThat(value, is("8090"));
-        });
+        assertNotNull(propertySource);
 
         withParameter(store, "/testqwe/server/port", "8080", () -> {
-            String value = (String) propertySource.getProperty("server.port");
-            assertThat(value, is("8080"));
+            assertThat(
+                    propertySource.getProperty("server.port"),
+                    is("8080")
+            );
+        });
+    }
+
+    @Test public void readParameterFromSecondRootFolder() {
+        assertNotNull(propertySource);
+
+        withParameter(store, "/commonqwe/server/port", "8090", () -> {
+            assertThat(
+                    propertySource.getProperty("server.port"),
+                    is("8090")
+            );
         });
 
     }
