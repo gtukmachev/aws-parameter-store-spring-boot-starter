@@ -12,7 +12,7 @@ public class AwsParameterStorePropertySource extends PropertySource<AwsParameter
     private final static Logger logger = LoggerFactory.getLogger(AwsParameterStorePropertySource.class);
 
     private final Map<String, Object> cache = new HashMap<>();
-    private final String MISSED_VALUE = "!<NULL>";
+    private final String MISSED_VALUE = "!@<NULL>";
 
     private final String[] rootSsnFolders;
 
@@ -32,7 +32,7 @@ public class AwsParameterStorePropertySource extends PropertySource<AwsParameter
                 String ssnKey = folder + key;
                 Object possibleValue = source.getProperty(ssnKey);
                 if (possibleValue != null) {
-                    logger.info("AWS Parameter Store loaded: '{\"property\": \"{}\", \"key\" = \"{}\", \"value\" = \"{}\"}"
+                    logger.info("AWS Parameter Store loaded: '{\"springProperty\": \"{}\", \"name\" = \"{}\", \"value\" = \"{}\"}"
                             , name_
                             , ssnKey
                             , possibleValue
