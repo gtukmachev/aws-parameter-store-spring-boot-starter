@@ -32,7 +32,7 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
      *     <li>/common/server/port <i>(if /app/server/port is undefined)</i></li>
      * </ul>
      */
-    static public final String pName_Roots                  = "psSpringProfiles.roots";
+    static public final String pName_Roots                  = "psRoots";
 
     static boolean initialized;
 

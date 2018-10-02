@@ -26,12 +26,6 @@
         <license>
             <name>MIT</name>
             <url>https://opensource.org/licenses/MIT</url>
-            <comments>
-                Copyright 2018 Grigory Tukmachev (gtukmachev@gmail.com)
-                Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-                The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-            </comments>
         </license>
     </licenses>
 
@@ -56,13 +50,6 @@
         <dependency> <artifactId>slf4j-api</artifactId>        <scope>provided</scope> <groupId>org.slf4j</groupId>                <version>${slf4j.version}</version> </dependency>
 
         <!-- Test libraries -->
-<!--
-        <dependency> <artifactId>spring-boot-starter-test</artifactId> <groupId>org.springframework.boot</groupId>
-            <version>1.5.14.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
--->
-
         <dependency> <artifactId>logback-classic</artifactId>  <scope>test</scope> <groupId>ch.qos.logback</groupId> <version>1.2.3</version> </dependency>
         <dependency> <artifactId>jul-to-slf4j</artifactId>     <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
         <dependency> <artifactId>log4j-over-slf4j</artifactId> <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
