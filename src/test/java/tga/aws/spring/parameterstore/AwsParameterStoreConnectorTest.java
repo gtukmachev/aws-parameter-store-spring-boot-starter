@@ -1,7 +1,9 @@
 package tga.aws.spring.parameterstore;
 
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
+import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathResult;
+import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -10,6 +12,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 
+import java.util.List;
+
 import static com.amazonaws.SDKGlobalConfiguration.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -17,86 +21,93 @@ import static tga.aws.spring.parameterstore.AwsParameterStoreConnector.pName_Acc
 import static tga.aws.spring.parameterstore.AwsParameterStoreConnector.pName_Roots;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
 public class AwsParameterStoreConnectorTest
 {
-    private static final String CUSTOM_PROFILES = "open,source,this";
-
-    @Mock private ConfigurableEnvironment configurableEnvironmentMock;
+    @Mock private ConfigurableEnvironment envMock;
     @Mock private MutablePropertySources mutablePropertySourcesMock;
     @Mock private SpringApplication applicationMock;
+    @Mock private AWSParameterStoreClientBuilder clientBuilderMock;
+    @Mock private AWSSimpleSystemsManagement awsClientMock;
+    @Mock private GetParametersByPathResult getParametersByPathResultMock;
+    @Mock private List<Parameter> parametersMock;
 
     private AwsParameterStoreConnector awsParameterStoreConnector = new AwsParameterStoreConnector();
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         AwsParameterStoreConnector.initialized = false;
+        awsParameterStoreConnector.setAwsParameterStoreClientBuilder( clientBuilderMock );
 
-        when(configurableEnvironmentMock.getProperty(pName_AcceptedSpringProfiles, String.class, "")).thenReturn("ANY");
-        when(configurableEnvironmentMock.getProperty(pName_Roots, String.class, "")).thenReturn("common");
-        when(configurableEnvironmentMock.getPropertySources()).thenReturn(mutablePropertySourcesMock);
+        when(clientBuilderMock.getClient()).thenReturn(awsClientMock);
+        when(awsClientMock.getParametersByPath(any())).thenReturn(getParametersByPathResultMock);
+        when(getParametersByPathResultMock.getNextToken()).thenReturn(null);
+        when(getParametersByPathResultMock.getParameters()).thenReturn(parametersMock);
+        when(parametersMock.isEmpty()).thenReturn(false);
+
+        when(envMock.acceptsProfiles(any(String.class))).thenAnswer( invocation -> {
+            String profile = (String)(invocation.getArguments()[0]);
+            return "Prod".equals(profile);
+        });
+
+        when(envMock.getPropertySources()).thenReturn(mutablePropertySourcesMock);
 
         System.setProperty(ACCESS_KEY_ENV_VAR, "id");
         System.setProperty(SECRET_KEY_ENV_VAR, "secret");
         System.setProperty(AWS_REGION_SYSTEM_PROPERTY, "region");
     }
 
-    @Test
-    public void testParameterStoreIsEnabledWithProfile()
-    {
-        awsParameterStoreConnector.postProcessEnvironment(configurableEnvironmentMock, applicationMock);
+    private void activateSpringProfiles(String profiles) {
+        when(envMock.getProperty(pName_AcceptedSpringProfiles, String.class, "")).thenReturn(profiles);
+    }
 
-        verify(mutablePropertySourcesMock).addFirst(any(AwsParameterStorePropertySource.class));
+    private void setupRootFolders(String rootFolders) {
+        when(envMock.getProperty(pName_Roots, String.class, "")).thenReturn(rootFolders);
     }
 
     @Test
-    public void testParameterStoreIsDisabledByDefault()
-    {
-        awsParameterStoreConnector.postProcessEnvironment(configurableEnvironmentMock,
-                                                                                    applicationMock);
+    public void testParameterStoreIsEnabledWithProfileProd() {
+        activateSpringProfiles("Prod");
+        setupRootFolders("/my-app,/common");
+        awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
+
+        verify(mutablePropertySourcesMock, times(1)).addFirst(any(AwsParameterStorePropertySource.class));
+    }
+
+    @Test
+    public void testParameterStoreIsDisabledByDefault() {
+        activateSpringProfiles("");
+        setupRootFolders("");
+        awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
+
+        verify(envMock, never()).acceptsProfiles("");
+        verifyZeroInteractions(mutablePropertySourcesMock);
+    }
+
+    @Test
+    public void testParameterStoreIsEnabledWithProfileANY() {
+        activateSpringProfiles("ANY");
+        setupRootFolders("");
+        awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
+
+        verify(envMock, never()).acceptsProfiles("");
+        verify(mutablePropertySourcesMock, times(1)).addFirst(any(AwsParameterStorePropertySource.class));
+    }
+
+    @Test
+    public void testParameterStoreIsDisabledOnUnaceptedProfile() {
+        activateSpringProfiles("Dev");
+        awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
 
         verifyZeroInteractions(mutablePropertySourcesMock);
     }
 
     @Test
-    public void testParameterStoreIsEnabledWithCustomProfiles() {
-        when(configurableEnvironmentMock.getProperty(pName_AcceptedSpringProfiles, String.class, "")).thenReturn(CUSTOM_PROFILES);
-        when(configurableEnvironmentMock.acceptsProfiles(CUSTOM_PROFILES.split(","))).thenReturn(true);
+    public void testParameterStorePropertySourceEnvironmentPostProcessorCantBeCalledTwice() {
+        activateSpringProfiles("ANY");
+        setupRootFolders("");
 
-        awsParameterStoreConnector.postProcessEnvironment(configurableEnvironmentMock, applicationMock);
-
-        verify(mutablePropertySourcesMock).addFirst(any(AwsParameterStorePropertySource.class));
-    }
-
-    @Test
-    public void testParameterStoreIsNotEnabledWithCustomProfilesEmpty() {
-        when(configurableEnvironmentMock.getProperty(pName_AcceptedSpringProfiles, String.class, "")).thenReturn("");
-        awsParameterStoreConnector.postProcessEnvironment(configurableEnvironmentMock, applicationMock);
-
-        verify(configurableEnvironmentMock, never()).acceptsProfiles("");
-        verifyZeroInteractions(mutablePropertySourcesMock);
-    }
-
-    @Test
-    public void testParameterStoreIsNotEnabledWithCustomProfilesButNoneOfTheProfilesActive()
-    {
-        when(configurableEnvironmentMock.getProperty(pName_AcceptedSpringProfiles, String.class, "")).thenReturn(CUSTOM_PROFILES);
-        when(configurableEnvironmentMock.acceptsProfiles(CUSTOM_PROFILES.split(","))).thenReturn(false);
-
-        awsParameterStoreConnector.postProcessEnvironment(configurableEnvironmentMock, applicationMock);
-
-        verifyZeroInteractions(mutablePropertySourcesMock);
-    }
-
-    @Test
-    public void testParameterStorePropertySourceEnvironmentPostProcessorCantBeCalledTwice()
-    {
-        when(configurableEnvironmentMock.getProperty(pName_AcceptedSpringProfiles, String.class, "")).thenReturn("ANY");
-
-        awsParameterStoreConnector.postProcessEnvironment(configurableEnvironmentMock, applicationMock);
-
-        awsParameterStoreConnector.postProcessEnvironment(configurableEnvironmentMock, applicationMock);
+        awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
+        awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
 
         verify(mutablePropertySourcesMock, times(1)).addFirst(any(AwsParameterStorePropertySource.class));
     }
