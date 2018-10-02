@@ -6,6 +6,7 @@ import com.amazonaws.services.simplesystemsmanagement.model.DeleteParameterReque
 import com.amazonaws.services.simplesystemsmanagement.model.ParameterType;
 import com.amazonaws.services.simplesystemsmanagement.model.PutParameterRequest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -26,7 +27,8 @@ import static org.mockito.Mockito.when;
  * Created by grigory@clearscale.net on 9/28/2018.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ReadPropertiesTests {
+@Ignore
+public class InteerationReadPropertiesTests {
 
     @Mock private SpringApplication springApplication;
     @Mock private ConfigurableEnvironment environment;

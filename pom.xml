@@ -4,23 +4,34 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>tga.aws</groupId>
-    <artifactId>spring-boot-parameter-store-loader</artifactId>
+    <artifactId>spring-boot-starter-aws-parameter-store</artifactId>
     <version>0.1.SNAPSHOT</version>
 
     <name>AWS Parameter Store to Spring Boot Property Loader</name>
     <description>
         Transparent Integration of the AWS "Parameter Store" with your Spring Boot application.
+
+        Initially was based on: https://github.com/coveo/spring-boot-parameter-store-integration
     </description>
     <url>https://github.com/gtukmachev/spring-boot-parameter-store-loader</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
+        <aws-java-sdk-ssm.version>1.11.416</aws-java-sdk-ssm.version>
+        <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
     <licenses>
         <license>
             <name>MIT</name>
             <url>https://opensource.org/licenses/MIT</url>
+            <comments>
+                Copyright 2018 Grigory Tukmachev (gtukmachev@gmail.com)
+                Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+                The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+            </comments>
         </license>
     </licenses>
 
@@ -33,62 +44,28 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:gtukmachev/spring-boot-parameter-store-loader.git</connection>
-        <developerConnection>scm:git:git@github.com:gtukmachev/spring-boot-parameter-store-loader.git</developerConnection>
-        <url>https://github.com/gtukmachev/spring-boot-parameter-store-loader</url>
+        <connection>scm:git:git@github.com:gtukmachev/spring-boot-starter-aws-parameter-store.git</connection>
+        <developerConnection>scm:git:git@github.com:gtukmachev/spring-boot-starter-aws-parameter-store.git</developerConnection>
+        <url>https://github.com/gtukmachev/spring-boot-starter-aws-parameter-store</url>
     </scm>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
-            <version>2.0.2.RELEASE</version>
-            <!--<scope>provided</scope>-->
-        </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-ssm</artifactId>
-            <version>1.11.416</version>
-        </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
-            <scope>provided</scope>
-        </dependency>
+        <dependency> <artifactId>spring-boot</artifactId>                              <groupId>org.springframework.boot</groupId> <version>${spring.boot.version}</version> </dependency>
+        <dependency> <artifactId>aws-java-sdk-ssm</artifactId>                         <groupId>com.amazonaws</groupId>            <version>${aws-java-sdk-ssm.version}</version> </dependency>
+        <dependency> <artifactId>slf4j-api</artifactId>        <scope>provided</scope> <groupId>org.slf4j</groupId>                <version>${slf4j.version}</version> </dependency>
 
         <!-- Test libraries -->
 <!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
-            <version>2.0.2.RELEASE</version>
+        <dependency> <artifactId>spring-boot-starter-test</artifactId> <groupId>org.springframework.boot</groupId>
+            <version>1.5.14.RELEASE</version>
             <scope>test</scope>
         </dependency>
 -->
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>1.5.14.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-        </dependency>
+        <dependency> <artifactId>logback-classic</artifactId>  <scope>test</scope> <groupId>ch.qos.logback</groupId> <version>1.2.3</version> </dependency>
+        <dependency> <artifactId>jul-to-slf4j</artifactId>     <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
+        <dependency> <artifactId>log4j-over-slf4j</artifactId> <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
 
     </dependencies>
 
