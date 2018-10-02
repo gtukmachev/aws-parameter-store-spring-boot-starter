@@ -51,7 +51,16 @@ you can:
     * the library will try read parameter `my.super.property` in the following order:
         1. `/my-app/my/super/property`
         1. `/common/my/super/property`   
-  
+
+#### Logging
+The library uses slf4j facade for logging. 
+The slf4j-api declared in pom as 'provided, so you have to provide a version of this framework in your classpath.
+
+Every success loading of a property will be logged using 
+`tga.aws.spring.parameterstore.AwsParameterStoreConnector` logger at `INFO` level. 
+
+The log format: `AWS Parameter Store loaded: '{"springProperty": "<property key>", "name" = "<aws parameter name>", "value" = "<loaded value>"}` 
+
 ## AWS Credentials
 
 The lib uses the [DefaultAWSCredentialProviderChain](https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html). This means if your code is running on an EC2 instance that has access to a Parameter Store property and its associated KMS key, the library should be able to fetch it without any configuration.
