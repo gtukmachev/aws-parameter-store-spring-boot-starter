@@ -40,7 +40,7 @@ public class AwsParameterStoreConnectorTest
 
         when(clientBuilderMock.getClient()).thenReturn(awsClientMock);
         when(awsClientMock.getParametersByPath(any())).thenReturn(getParametersByPathResultMock);
-        when(getParametersByPathResultMock.getNextToken()).thenReturn(null);
+        //when(getParametersByPathResultMock.getNextToken()).thenReturn(null);
         when(getParametersByPathResultMock.getParameters()).thenReturn(parametersMock);
         when(parametersMock.isEmpty()).thenReturn(false);
 

@@ -50,9 +50,10 @@
         <dependency> <artifactId>slf4j-api</artifactId>        <scope>provided</scope> <groupId>org.slf4j</groupId>                <version>${slf4j.version}</version> </dependency>
 
         <!-- Test libraries -->
-        <dependency> <artifactId>logback-classic</artifactId>  <scope>test</scope> <groupId>ch.qos.logback</groupId> <version>1.2.3</version> </dependency>
-        <dependency> <artifactId>jul-to-slf4j</artifactId>     <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
-        <dependency> <artifactId>log4j-over-slf4j</artifactId> <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
+        <dependency> <artifactId>spring-boot-starter-test</artifactId> <scope>test</scope> <groupId>org.springframework.boot</groupId> <version>${spring.boot.version}</version> </dependency>
+        <dependency> <artifactId>logback-classic</artifactId>          <scope>test</scope> <groupId>ch.qos.logback</groupId> <version>1.2.3</version> </dependency>
+        <dependency> <artifactId>jul-to-slf4j</artifactId>             <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
+        <dependency> <artifactId>log4j-over-slf4j</artifactId>         <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
 
     </dependencies>
 
