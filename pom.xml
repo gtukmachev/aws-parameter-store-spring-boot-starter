@@ -5,7 +5,7 @@
 
     <groupId>tga.aws</groupId>
     <artifactId>spring-boot-starter-aws-parameter-store</artifactId>
-    <version>0.1.SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
 
     <name>AWS Parameter Store to Spring Boot Property Loader</name>
     <description>
@@ -17,9 +17,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-        <aws-java-sdk-ssm.version>1.11.416</aws-java-sdk-ssm.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <sbs.spring.boot.version>2.0.2.RELEASE</sbs.spring.boot.version>
+        <sbs.aws-java-sdk-ssm.version>1.11.416</sbs.aws-java-sdk-ssm.version>
+        <sbs.slf4j.version>1.7.25</sbs.slf4j.version>
+        <sbs.logback.version>1.2.3</sbs.logback.version>
     </properties>
 
     <licenses>
@@ -45,15 +46,15 @@
 
     <dependencies>
 
-        <dependency> <artifactId>spring-boot</artifactId>                              <groupId>org.springframework.boot</groupId> <version>${spring.boot.version}</version> </dependency>
-        <dependency> <artifactId>aws-java-sdk-ssm</artifactId>                         <groupId>com.amazonaws</groupId>            <version>${aws-java-sdk-ssm.version}</version> </dependency>
-        <dependency> <artifactId>slf4j-api</artifactId>        <scope>provided</scope> <groupId>org.slf4j</groupId>                <version>${slf4j.version}</version> </dependency>
+        <dependency> <artifactId>spring-boot</artifactId>                              <groupId>org.springframework.boot</groupId> <version>${sbs.spring.boot.version}</version> </dependency>
+        <dependency> <artifactId>aws-java-sdk-ssm</artifactId>                         <groupId>com.amazonaws</groupId>            <version>${sbs.aws-java-sdk-ssm.version}</version> </dependency>
+        <dependency> <artifactId>slf4j-api</artifactId>        <scope>provided</scope> <groupId>org.slf4j</groupId>                <version>${sbs.slf4j.version}</version> </dependency>
 
         <!-- Test libraries -->
-        <dependency> <artifactId>spring-boot-starter-test</artifactId> <scope>test</scope> <groupId>org.springframework.boot</groupId> <version>${spring.boot.version}</version> </dependency>
-        <dependency> <artifactId>logback-classic</artifactId>          <scope>test</scope> <groupId>ch.qos.logback</groupId> <version>1.2.3</version> </dependency>
-        <dependency> <artifactId>jul-to-slf4j</artifactId>             <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
-        <dependency> <artifactId>log4j-over-slf4j</artifactId>         <scope>test</scope> <groupId>org.slf4j</groupId> </dependency>
+        <dependency> <artifactId>spring-boot-starter-test</artifactId> <scope>test</scope> <groupId>org.springframework.boot</groupId> <version>${sbs.spring.boot.version}</version> </dependency>
+        <dependency> <artifactId>logback-classic</artifactId>          <scope>test</scope> <groupId>ch.qos.logback</groupId> <version>${sbs.logback.version}</version> </dependency>
+        <dependency> <artifactId>jul-to-slf4j</artifactId>             <scope>test</scope> <groupId>org.slf4j</groupId>      <version>${sbs.slf4j.version}</version> </dependency>
+        <dependency> <artifactId>log4j-over-slf4j</artifactId>         <scope>test</scope> <groupId>org.slf4j</groupId>      <version>${sbs.slf4j.version}</version> </dependency>
 
     </dependencies>
 

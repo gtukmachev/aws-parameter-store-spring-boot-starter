@@ -13,24 +13,24 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
 
     static private final Logger logger = LoggerFactory.getLogger(AwsParameterStoreConnector.class);
 
-    /**
-     * <p>List of spring profiles (comma separated). If one of these profiles is active - the AWS Property Source Connector will be activated</p>
-     * <p>use ANY profile name to activate it for all profiles (or !xxx)</p>
+    /*
+      <p>List of spring profiles (comma separated). If one of these profiles is active - the AWS Property Source Connector will be activated</p>
+      <p>use ANY profile name to activate it for all profiles (or !xxx)</p>
      */
     static public final String pName_AcceptedSpringProfiles = "psSpringProfiles";
 
-    /**
-     * <p>A list of comma separated root folders inside AWS Parameter Store</p>
-     * <p>Example: "/app,/common"</p>
-     * <p>In this case, the connector will search for your properties inside /app and then (if no one found) inside /common folders of th AWS Parameter Store</p>
-     * <p>The symbol '/' in front of a folder name is important - see documentation of AWS Property Source service</p>
-     * <p>Your spring-property names will be converted to AWS Property Source keys via the following convention:</p>
-     * <p>ROOT_FOLDER/PROPERTY_NAME - all '.' (dots) will be replaced to '/' </p>
-     * <p>So, for psSpringProfiles.roots="/app,/common", and you'll request 'server.port' property, the following properties will be read from AWS:<p/>
-     * <ul>
-     *     <li>/app/server/port</li>
-     *     <li>/common/server/port <i>(if /app/server/port is undefined)</i></li>
-     * </ul>
+    /*
+      <p>A list of comma separated root folders inside AWS Parameter Store</p>
+      <p>Example: "/app,/common"</p>
+      <p>In this case, the connector will search for your properties inside /app and then (if no one found) inside /common folders of th AWS Parameter Store</p>
+      <p>The symbol '/' in front of a folder name is important - see documentation of AWS Property Source service</p>
+      <p>Your spring-property names will be converted to AWS Property Source keys via the following convention:</p>
+      <p>ROOT_FOLDER/PROPERTY_NAME - all '.' (dots) will be replaced to '/' </p>
+      <p>So, for psSpringProfiles.roots="/app,/common", and you'll request 'server.port' property, the following properties will be read from AWS:<p/>
+      <ul>
+          <li>/app/server/port</li>
+          <li>/common/server/port <i>(if /app/server/port is undefined)</i></li>
+      </ul>
      */
     static public final String pName_Roots                  = "psRoots";
 
