@@ -39,9 +39,11 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
     private AWSParameterStoreClientBuilder awsParameterStoreClientBuilder = new AWSParameterStoreClientBuilder();
 
     @Override
-    public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application)
-    {
+    public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+        logger.warn("AWS Parameter Store integration: initialization started...");
+
         if (!initialized && isParameterStorePropertySourceEnabled(environment)) {
+
             String[] roots = environment.getProperty(pName_Roots, String.class, "")
                     .split(",");
 
@@ -58,9 +60,14 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
                                         roots
                                 )
                         );
+                logger.info("AWS Parameter Store integration: activated");
+            } else {
+                logger.warn("AWS Parameter Store integration: was not activated due a connection issue");
             }
 
             initialized = true;
+        } else {
+            logger.warn("AWS Parameter Store integration: was not activated");
         }
     }
 

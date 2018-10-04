@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>tga.aws</groupId>
-    <artifactId>spring-boot-starter-aws-parameter-store</artifactId>
+    <artifactId>aws-parameter-store-spring-boot-starter</artifactId>
     <version>0.1-SNAPSHOT</version>
 
     <name>AWS Parameter Store to Spring Boot Property Loader</name>
