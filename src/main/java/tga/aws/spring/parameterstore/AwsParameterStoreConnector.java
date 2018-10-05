@@ -3,15 +3,13 @@ package tga.aws.spring.parameterstore;
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
 
-    static private final Logger logger = LoggerFactory.getLogger(AwsParameterStoreConnector.class);
+    static private final SystemOutLogger logger = new SystemOutLogger();
 
     /*
       <p>List of spring profiles (comma separated). If one of these profiles is active - the AWS Property Source Connector will be activated</p>

@@ -46,12 +46,12 @@
 
     <dependencies>
 
-        <dependency> <artifactId>spring-boot</artifactId>                              <groupId>org.springframework.boot</groupId> <version>${sbs.spring.boot.version}</version> </dependency>
-        <dependency> <artifactId>aws-java-sdk-ssm</artifactId>                         <groupId>com.amazonaws</groupId>            <version>${sbs.aws-java-sdk-ssm.version}</version> </dependency>
-        <dependency> <artifactId>slf4j-api</artifactId>        <scope>provided</scope> <groupId>org.slf4j</groupId>                <version>${sbs.slf4j.version}</version> </dependency>
+        <dependency> <artifactId>spring-boot</artifactId>      <groupId>org.springframework.boot</groupId> <version>${sbs.spring.boot.version}</version> </dependency>
+        <dependency> <artifactId>aws-java-sdk-ssm</artifactId> <groupId>com.amazonaws</groupId>            <version>${sbs.aws-java-sdk-ssm.version}</version> </dependency>
 
         <!-- Test libraries -->
         <dependency> <artifactId>spring-boot-starter-test</artifactId> <scope>test</scope> <groupId>org.springframework.boot</groupId> <version>${sbs.spring.boot.version}</version> </dependency>
+        <dependency> <artifactId>slf4j-api</artifactId>                <scope>test</scope> <groupId>org.slf4j</groupId>                <version>${sbs.slf4j.version}</version> </dependency>
         <dependency> <artifactId>logback-classic</artifactId>          <scope>test</scope> <groupId>ch.qos.logback</groupId> <version>${sbs.logback.version}</version> </dependency>
         <dependency> <artifactId>jul-to-slf4j</artifactId>             <scope>test</scope> <groupId>org.slf4j</groupId>      <version>${sbs.slf4j.version}</version> </dependency>
         <dependency> <artifactId>log4j-over-slf4j</artifactId>         <scope>test</scope> <groupId>org.slf4j</groupId>      <version>${sbs.slf4j.version}</version> </dependency>

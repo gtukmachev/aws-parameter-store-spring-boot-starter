@@ -1,7 +1,5 @@
 package tga.aws.spring.parameterstore;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.env.PropertySource;
 
 import java.util.HashMap;
@@ -9,7 +7,7 @@ import java.util.Map;
 
 public class AwsParameterStorePropertySource extends PropertySource<AwsParameterStoreSource> {
 
-    private final static Logger logger = LoggerFactory.getLogger(AwsParameterStorePropertySource.class);
+    private final static SystemOutLogger logger = new SystemOutLogger();
 
     private final Map<String, Object> cache = new HashMap<>();
     private final String MISSED_VALUE = "!@<NULL>";
@@ -32,10 +30,9 @@ public class AwsParameterStorePropertySource extends PropertySource<AwsParameter
                 String ssnKey = folder + key;
                 Object possibleValue = source.getProperty(ssnKey);
                 if (possibleValue != null) {
-                    logger.info("AWS Parameter Store loaded: '{\"springProperty\": \"{}\", \"name\" = \"{}\", \"value\" = \"{}\"}"
-                            , name_
-                            , ssnKey
-                            , possibleValue
+                    logger.info("AWS Parameter Store loaded: '{\"springProperty\": \"" + name
+                            + "\", \"name\" = \"" + ssnKey
+                            + "\", \"value\" = \"" + possibleValue + "\"}"
                     );
                     return possibleValue;
                 }

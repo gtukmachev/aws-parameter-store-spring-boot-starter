@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
  * Created by grigory@clearscale.net on 9/28/2018.
  */
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
 public class InteerationReadPropertiesTests {
 
     @Mock private SpringApplication springApplication;
@@ -67,7 +66,9 @@ public class InteerationReadPropertiesTests {
         propertySource = this.mutablePropertySources.get("AwsParameterStorePropertySource");
     }
 
-    @Test public void readParameterFromFirstRootFolder() {
+    @Test
+    @Ignore
+    public void readParameterFromFirstRootFolder() {
         assertNotNull(propertySource);
 
         withParameter(store, "/testqwe/server/port", "8080", () -> {
@@ -78,7 +79,9 @@ public class InteerationReadPropertiesTests {
         });
     }
 
-    @Test public void readParameterFromSecondRootFolder() {
+    @Test
+    @Ignore
+    public void readParameterFromSecondRootFolder() {
         assertNotNull(propertySource);
 
         withParameter(store, "/commonqwe/server/port", "8090", () -> {
@@ -90,6 +93,16 @@ public class InteerationReadPropertiesTests {
 
     }
 
+
+    @Test
+    @Ignore
+    public void makeParam() {
+        store.putParameter( new PutParameterRequest()
+                .withName("/commonspace/myapp/name")
+                .withType(ParameterType.String)
+                .withValue("A name from AWS")
+        );
+    }
 
     private void withParameter(AWSSimpleSystemsManagement store, String name, String value, CodeBlock codeBlock){
         store.putParameter( new PutParameterRequest()
@@ -104,7 +117,6 @@ public class InteerationReadPropertiesTests {
             store.deleteParameter( new DeleteParameterRequest().withName(name));
         }
     }
-
 
     @FunctionalInterface
     interface CodeBlock {
