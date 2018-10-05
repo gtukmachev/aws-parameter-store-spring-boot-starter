@@ -20,14 +20,14 @@ public class AwsParameterStorePropertySourceTest
     private static final String VALID_VALUE = "myvalidvalue";
 
     @Mock
-    private AwsParameterStoreSource pssMock;
+    private AwsParameterStorePropertySource.EmptyPopertySource pssMock;
 
     private AwsParameterStorePropertySource psps;
 
     private void setUp(String rootFoldersStr, String param, String value) {
         Map<String, Parameter> params = new HashMap<>();
         params.putIfAbsent(param, new Parameter().withValue(value));
-        psps = new AwsParameterStorePropertySource("aName", params, pssMock, rootFoldersStr.split(","));
+        psps = new AwsParameterStorePropertySource("aName", params);
     }
 
 /*

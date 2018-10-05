@@ -42,31 +42,25 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        logger.warn("AWS Parameter Store integration: initialization started...");
+        logger.info("AWS Parameter Store integration: initialization started...");
 
         if (!initialized && isParameterStorePropertySourceEnabled(environment)) {
 
             String[] roots = environment.getProperty(pName_Roots, String.class, "")
                     .split(",");
-
             if (roots.length == 0) roots = new String[]{""};
 
             AWSSimpleSystemsManagement client = buildAwsClient(roots, environment);
 
             if (client != null) {
-
-                Map<String, Parameter> properties = readAllProps(client, roots);
-
-                environment.getPropertySources()
-                        .addFirst(
-                                new AwsParameterStorePropertySource(
-                                        "AwsParameterStorePropertySource",
-                                        properties,
-                                        new AwsParameterStoreSource( client),
-                                        roots
-                                )
-                        );
-                logger.info("AWS Parameter Store integration: activated");
+                Map<String, Parameter> params = readAllProps(client, roots);
+                if (! params.isEmpty()) {
+                    environment.getPropertySources()
+                            .addFirst( new AwsParameterStorePropertySource( "AwsParameterStorePropertySource", params ) );
+                    logger.info("AWS Parameter Store integration: activated ("+ params.size() +" parameters loaded)");
+                } else {
+                    logger.warn("AWS Parameter Store integration: was not activated (no parameters found)");
+                }
             } else {
                 logger.warn("AWS Parameter Store integration: was not activated due a connection issue");
             }
