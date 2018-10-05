@@ -2,6 +2,7 @@ package tga.aws.spring.parameterstore;
 
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest;
+import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
 import com.amazonaws.services.simplesystemsmanagement.model.ParameterNotFoundException;
 import tga.aws.spring.parameterstore.exception.AwsParameterStoreConnectorException;
 
@@ -12,11 +13,10 @@ public class AwsParameterStoreSource {
         this.ssmClient = ssmClient;
     }
 
-    public Object getProperty(String propertyName) {
+    public Parameter getProperty(String propertyName) {
         try {
             return ssmClient.getParameter(new GetParameterRequest().withName(propertyName).withWithDecryption(true))
-                            .getParameter()
-                            .getValue();
+                            .getParameter();
         } catch (ParameterNotFoundException e) {
             return null;
         } catch (Exception e) {

@@ -40,9 +40,9 @@ public class AwsParameterStoreSourceTest {
                 .thenReturn(new GetParameterResult()
                         .withParameter(new Parameter().withValue(VALID_PROPERTY_VALUE)));
 
-        Object value = parameterStoreSource.getProperty(VALID_PROPERTY_NAME);
+        Parameter param = parameterStoreSource.getProperty(VALID_PROPERTY_NAME);
 
-        assertThat(value, is(VALID_PROPERTY_VALUE));
+        assertThat(param.getValue(), is(VALID_PROPERTY_VALUE));
     }
 
     @Test

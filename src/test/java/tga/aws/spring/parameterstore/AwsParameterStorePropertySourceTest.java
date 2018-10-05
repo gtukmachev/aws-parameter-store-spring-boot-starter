@@ -1,9 +1,12 @@
 package tga.aws.spring.parameterstore;
 
+import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.HashMap;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -23,11 +26,11 @@ public class AwsParameterStorePropertySourceTest
     private AwsParameterStorePropertySource psps;
 
     private void setUp(String rootFoldersStr) {
-        psps = new AwsParameterStorePropertySource("aName", pssMock, rootFoldersStr.split(","));
+        psps = new AwsParameterStorePropertySource("aName", new HashMap<>(), pssMock, rootFoldersStr.split(","));
     }
 
     private void withVal(String name, String value) {
-        when(pssMock.getProperty(name)).thenReturn(value);
+        when(pssMock.getProperty(name)).thenReturn( new Parameter().withValue(value));
     }
 
     @Test public void getExistedPropertyShouldReturnValue() {

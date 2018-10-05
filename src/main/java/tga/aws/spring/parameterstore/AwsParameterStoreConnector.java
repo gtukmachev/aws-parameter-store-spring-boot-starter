@@ -3,9 +3,13 @@ package tga.aws.spring.parameterstore;
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathResult;
+import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
 
@@ -50,11 +54,15 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
             AWSSimpleSystemsManagement client = buildAwsClient(roots, environment);
 
             if (client != null) {
+
+                Map<String, Parameter> properties = readAllProps(client, roots);
+
                 environment.getPropertySources()
                         .addFirst(
                                 new AwsParameterStorePropertySource(
                                         "AwsParameterStorePropertySource",
-                                        new AwsParameterStoreSource( client ),
+                                        properties,
+                                        new AwsParameterStoreSource( client),
                                         roots
                                 )
                         );
@@ -67,6 +75,40 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
         } else {
             logger.warn("AWS Parameter Store integration: was not activated");
         }
+    }
+
+    private Map<String, Parameter> readAllProps(AWSSimpleSystemsManagement client, String[] roots) {
+
+        Map<String, Parameter> props = new HashMap<>();
+
+        for (String root : roots) {
+            String nextToken = null;
+
+            do {
+                GetParametersByPathResult result = client.getParametersByPath( new GetParametersByPathRequest()
+                        .withPath(root)
+                        .withWithDecryption(true)
+                        .withRecursive(true)
+                        .withNextToken(nextToken)
+                );
+                nextToken = result.getNextToken();
+
+                if (result.getParameters() != null){
+                    for ( Parameter p : result.getParameters() ) {
+                        props.computeIfAbsent(p.getName().substring(root.length()),
+                                key -> {
+                                    logger.info("AWS Parameter Store: " + p.toString());
+                                    return p;
+                                }
+                        );
+                    }
+                }
+
+            } while (nextToken != null);
+
+        }
+
+        return props;
     }
 
     private AWSSimpleSystemsManagement buildAwsClient(String[] roots, ConfigurableEnvironment environment) {

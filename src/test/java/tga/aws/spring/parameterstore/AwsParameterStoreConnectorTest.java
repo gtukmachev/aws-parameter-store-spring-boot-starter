@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.amazonaws.SDKGlobalConfiguration.*;
@@ -43,6 +44,9 @@ public class AwsParameterStoreConnectorTest
         //when(getParametersByPathResultMock.getNextToken()).thenReturn(null);
         when(getParametersByPathResultMock.getParameters()).thenReturn(parametersMock);
         when(parametersMock.isEmpty()).thenReturn(false);
+        when(parametersMock.iterator()).thenReturn(Collections.singletonList(
+                new Parameter().withName("/a/name").withValue("a value")
+            ).iterator());
 
         when(envMock.acceptsProfiles(any(String.class))).thenAnswer( invocation -> {
             String profile = (String)(invocation.getArguments()[0]);
