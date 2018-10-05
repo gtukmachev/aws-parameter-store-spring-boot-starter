@@ -91,7 +91,7 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
                     for ( Parameter p : result.getParameters() ) {
                         props.computeIfAbsent(p.getName().substring(root.length()+1).replace("/", "."),
                                 key -> {
-                                    logger.info("AWS Parameter Store loaded: '{\"springProperty\": \"" + key
+                                    logger.info("AWS Parameter Store loaded: {\"springProperty\": \"" + key
                                             + "\", \"name\" = \"" + p.getName()
                                             + "\", \"value\" = \"" + getSecureValue( p ) + "\"}"
                                     );
