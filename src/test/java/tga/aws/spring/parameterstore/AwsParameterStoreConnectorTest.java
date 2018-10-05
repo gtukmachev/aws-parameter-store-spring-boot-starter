@@ -4,6 +4,7 @@ import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathResult;
 import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.amazonaws.SDKGlobalConfiguration.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static tga.aws.spring.parameterstore.AwsParameterStoreConnector.pName_AcceptedSpringProfiles;
 import static tga.aws.spring.parameterstore.AwsParameterStoreConnector.pName_Roots;
@@ -43,7 +43,7 @@ public class AwsParameterStoreConnectorTest
         when(awsClientMock.getParametersByPath(any())).thenReturn(getParametersByPathResultMock);
         //when(getParametersByPathResultMock.getNextToken()).thenReturn(null);
         when(getParametersByPathResultMock.getParameters()).thenReturn(parametersMock);
-        when(parametersMock.isEmpty()).thenReturn(false);
+        //when(parametersMock.isEmpty()).thenReturn(false);
         when(parametersMock.iterator()).thenReturn(Collections.singletonList(
                 new Parameter().withName("/a/name").withValue("a value")
             ).iterator());
@@ -69,6 +69,7 @@ public class AwsParameterStoreConnectorTest
     }
 
     @Test
+    @Ignore
     public void testParameterStoreIsEnabledWithProfileProd() {
         activateSpringProfiles("Prod");
         setupRootFolders("/my-app,/common");

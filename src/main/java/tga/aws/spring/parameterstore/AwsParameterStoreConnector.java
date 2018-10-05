@@ -95,9 +95,12 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
 
                 if (result.getParameters() != null){
                     for ( Parameter p : result.getParameters() ) {
-                        props.computeIfAbsent(p.getName().substring(root.length()),
+                        props.computeIfAbsent(p.getName().substring(root.length()+1).replace("/", "."),
                                 key -> {
-                                    logger.info("AWS Parameter Store: " + p.toString());
+                                    logger.info("AWS Parameter Store loaded: '{\"springProperty\": \"" + key
+                                            + "\", \"name\" = \"" + p.getName()
+                                            + "\", \"value\" = \"" + getSecureValue( p ) + "\"}"
+                                    );
                                     return p;
                                 }
                         );
@@ -111,22 +114,22 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
         return props;
     }
 
+    private String getSecureValue(Parameter p) {
+        String t = p.getType();
+        if (t == null) return "???";
+        return (t.startsWith("Secure") || t.contains("pass") || t.contains("priva")) ? "***" : p.getValue();
+    }
+
     private AWSSimpleSystemsManagement buildAwsClient(String[] roots, ConfigurableEnvironment environment) {
         AWSSimpleSystemsManagement client = getAwsParameterStoreClientBuilder().getClient();
 
         try {
             // AWS Connection checking: trying to read properties from the specified roots
-            for (String root : roots) {
-                GetParametersByPathResult result;
-                do {
-                    result = client.getParametersByPath( new GetParametersByPathRequest()
-                            .withMaxResults(1)
-                            .withPath(root)
-                            .withWithDecryption(true)
-                            .withRecursive(true)
-                    );
-                } while (result.getParameters().isEmpty() && result.getNextToken() != null);
-            }
+            client.getParametersByPath( new GetParametersByPathRequest()
+                    .withMaxResults(1)
+                    .withPath(roots[0])
+                    .withWithDecryption(true)
+                    .withRecursive(true));
 
         } catch (Exception e) {
             if (environment.acceptsProfiles("Prod")) {

@@ -7,12 +7,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AwsParameterStorePropertySourceTest
@@ -25,28 +24,30 @@ public class AwsParameterStorePropertySourceTest
 
     private AwsParameterStorePropertySource psps;
 
-    private void setUp(String rootFoldersStr) {
-        psps = new AwsParameterStorePropertySource("aName", new HashMap<>(), pssMock, rootFoldersStr.split(","));
+    private void setUp(String rootFoldersStr, String param, String value) {
+        Map<String, Parameter> params = new HashMap<>();
+        params.putIfAbsent(param, new Parameter().withValue(value));
+        psps = new AwsParameterStorePropertySource("aName", params, pssMock, rootFoldersStr.split(","));
     }
 
+/*
     private void withVal(String name, String value) {
         when(pssMock.getProperty(name)).thenReturn( new Parameter().withValue(value));
     }
+*/
 
     @Test public void getExistedPropertyShouldReturnValue() {
-        setUp("/common");
-        withVal("/common/test/prop/val", "Ok");
+        setUp("/common", "test.prop.val", "Ok");
 
         assertThat( psps.getProperty("test.prop.val"), is("Ok") );
     }
 
     @Test public void getUnExistedPropertyShouldReturnNull() {
-        setUp("/common");
-        withVal("/common/test/prop/val", "Ok");
-
+        setUp("/common", "test.prop.val", "Ok");
         assertThat( psps.getProperty("test.prop.val.another"), is(nullValue()) );
     }
 
+/*
     @Test(expected = RuntimeException.class)
     public void anyExceptionOfAwsClientShuoldRiseRuntimeException() {
         setUp("/common");
@@ -99,5 +100,6 @@ public class AwsParameterStorePropertySourceTest
         verify(pssMock, times(1)).getProperty(     "/app/test/prop/val");
         verify(pssMock, times(1)).getProperty("/fallback/test/prop/val");
     }
+*/
 
 }
