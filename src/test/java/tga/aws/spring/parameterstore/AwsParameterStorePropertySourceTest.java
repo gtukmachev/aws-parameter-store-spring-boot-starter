@@ -1,9 +1,9 @@
 package tga.aws.spring.parameterstore;
 
 import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashMap;
@@ -16,90 +16,35 @@ import static org.junit.Assert.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class AwsParameterStorePropertySourceTest
 {
-    private final String pName = "valid.property";
-    private static final String VALID_VALUE = "myvalidvalue";
-
-    @Mock
-    private AwsParameterStorePropertySource.EmptyPopertySource pssMock;
 
     private AwsParameterStorePropertySource psps;
 
-    private void setUp(String rootFoldersStr, String param, String value) {
+    @Before
+    public void setUp() {
+        psps = new AwsParameterStorePropertySource("a name", buildParams(
+                "prop.val.x", "/common/prop/val/x", "valid value x",
+                "prop.val.y", "/myapp/prop/val/y", "valid value y"
+        ));
+    }
+
+    @Test
+    public void sourceShouldReturnValidValue() {
+        assertThat( psps.getProperty("prop.val.x"), is("valid value x"));
+        assertThat( psps.getProperty("prop.val.y"), is("valid value y"));
+    }
+
+    @Test
+    public void sourceShouldReturnNullOnMissedKey() {
+        assertThat( psps.getProperty("prop.val.no"), is(nullValue()));
+    }
+
+    private Map<String, Parameter> buildParams(String... p) {
         Map<String, Parameter> params = new HashMap<>();
-        params.putIfAbsent(param, new Parameter().withValue(value));
-        psps = new AwsParameterStorePropertySource("aName", params);
+
+        for (int i = 0; i < p.length; i += 3 )
+            params.put(p[i], new Parameter().withName(p[i+1]).withValue(p[i+2]));
+
+        return params;
     }
-
-/*
-    private void withVal(String name, String value) {
-        when(pssMock.getProperty(name)).thenReturn( new Parameter().withValue(value));
-    }
-*/
-
-    @Test public void getExistedPropertyShouldReturnValue() {
-        setUp("/common", "test.prop.val", "Ok");
-
-        assertThat( psps.getProperty("test.prop.val"), is("Ok") );
-    }
-
-    @Test public void getUnExistedPropertyShouldReturnNull() {
-        setUp("/common", "test.prop.val", "Ok");
-        assertThat( psps.getProperty("test.prop.val.another"), is(nullValue()) );
-    }
-
-/*
-    @Test(expected = RuntimeException.class)
-    public void anyExceptionOfAwsClientShuoldRiseRuntimeException() {
-        setUp("/common");
-        withVal("/common/test/prop/val", "Ok");
-
-        when(pssMock.getProperty(any()))
-                .thenThrow(new RuntimeException("Some exception"));
-
-        psps.getProperty("test.prop.val");
-    }
-
-    @Test public void getExistedPropertyShouldRequestAwsOnlyOnce() {
-        setUp("/common");
-        withVal("/common/test/prop/val", "Ok");
-
-        psps.getProperty("test.prop.val");
-        psps.getProperty("test.prop.val");
-        verify(pssMock, times(1)).getProperty("/common/test/prop/val");
-    }
-
-    @Test public void getUnExistedPropertyShouldRequestAwsOnlyOnce() {
-        setUp("/common");
-        withVal("/common/test/prop/val", "Ok");
-
-        psps.getProperty("test.prop.val.wrong");
-        psps.getProperty("test.prop.val.wrong");
-        verify(pssMock, times(1)).getProperty("/common/test/prop/val/wrong");
-    }
-
-    @Test public void getExistedPropertyShouldReturnValueFromTheSecondFolderOf3() {
-        setUp("/app,/common,/fallback");
-        withVal("/app/test/prop/another", "No");
-        withVal("/common/test/prop/val", "Ok");
-
-        assertThat( psps.getProperty("test.prop.val"), is("Ok") );
-
-        verify(pssMock, times(1)).getProperty(  "/common/test/prop/val");
-        verify(pssMock, times(1)).getProperty(     "/app/test/prop/val");
-        verify(pssMock, times(0)).getProperty("/fallback/test/prop/val");
-    }
-
-
-    @Test public void getUnExistedPropertyScanAllFolders() {
-        setUp("/app,/common,/fallback");
-        withVal("/app/test/prop/another", "a-value");
-
-        assertThat( psps.getProperty("test.prop.val"), is(nullValue()) );
-
-        verify(pssMock, times(1)).getProperty(  "/common/test/prop/val");
-        verify(pssMock, times(1)).getProperty(     "/app/test/prop/val");
-        verify(pssMock, times(1)).getProperty("/fallback/test/prop/val");
-    }
-*/
 
 }

@@ -5,14 +5,14 @@ import org.springframework.core.env.PropertySource;
 
 import java.util.Map;
 
-public class AwsParameterStorePropertySource extends PropertySource<AwsParameterStorePropertySource.EmptyPopertySource> {
+public class AwsParameterStorePropertySource extends PropertySource<AwsParameterStorePropertySource.EmptySource> {
 
     private final Map<String, Parameter> parameters;
 
     private final Parameter MISSED_VALUE = new Parameter().withValue(null);
 
     public AwsParameterStorePropertySource(String name, Map<String, Parameter> parameters) {
-        super(name, new EmptyPopertySource());
+        super(name, new EmptySource());
         this.parameters = parameters;
 
     }
@@ -22,8 +22,7 @@ public class AwsParameterStorePropertySource extends PropertySource<AwsParameter
         return parameters.getOrDefault(name, MISSED_VALUE).getValue();
     }
 
-    public static class EmptyPopertySource {
-
+    public static class EmptySource {
         public Object getProperty(String propertyName) {
             return null;
         }
