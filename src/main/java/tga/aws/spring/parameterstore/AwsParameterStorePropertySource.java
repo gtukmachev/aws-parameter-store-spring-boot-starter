@@ -28,7 +28,10 @@ public class AwsParameterStorePropertySource extends PropertySource<AwsParameter
 
     @Override
     public Object getProperty(String name) {
+        return parameters.getOrDefault(name, MISSED_VALUE).getValue();
 
+/*
+        // it's commented, becouse of the reading properties one by one takes too long time itself. now we are reading all available props at start time
         Parameter param = parameters.computeIfAbsent(name, name_ -> {
             String key = "/" + name_.replace(".", "/");
 
@@ -48,5 +51,6 @@ public class AwsParameterStorePropertySource extends PropertySource<AwsParameter
         });
 
         return param.getValue();
+*/
     }
 }
