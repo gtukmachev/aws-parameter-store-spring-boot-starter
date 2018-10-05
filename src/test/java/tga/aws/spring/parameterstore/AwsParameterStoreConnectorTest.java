@@ -1,20 +1,23 @@
 package tga.aws.spring.parameterstore;
 
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
+import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathResult;
 import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.amazonaws.SDKGlobalConfiguration.*;
 import static org.mockito.Mockito.*;
@@ -29,8 +32,6 @@ public class AwsParameterStoreConnectorTest
     @Mock private SpringApplication applicationMock;
     @Mock private AWSParameterStoreClientBuilder clientBuilderMock;
     @Mock private AWSSimpleSystemsManagement awsClientMock;
-    @Mock private GetParametersByPathResult getParametersByPathResultMock;
-    @Mock private List<Parameter> parametersMock;
 
     private AwsParameterStoreConnector awsParameterStoreConnector = new AwsParameterStoreConnector();
 
@@ -38,15 +39,7 @@ public class AwsParameterStoreConnectorTest
     public void setUp() {
         AwsParameterStoreConnector.initialized = false;
         awsParameterStoreConnector.setAwsParameterStoreClientBuilder( clientBuilderMock );
-
         when(clientBuilderMock.getClient()).thenReturn(awsClientMock);
-        when(awsClientMock.getParametersByPath(any())).thenReturn(getParametersByPathResultMock);
-        //when(getParametersByPathResultMock.getNextToken()).thenReturn(null);
-        when(getParametersByPathResultMock.getParameters()).thenReturn(parametersMock);
-        //when(parametersMock.isEmpty()).thenReturn(false);
-        when(parametersMock.iterator()).thenReturn(Collections.singletonList(
-                new Parameter().withName("/a/name").withValue("a value")
-            ).iterator());
 
         when(envMock.acceptsProfiles(any(String.class))).thenAnswer( invocation -> {
             String profile = (String)(invocation.getArguments()[0]);
@@ -68,11 +61,55 @@ public class AwsParameterStoreConnectorTest
         when(envMock.getProperty(pName_Roots, String.class, "")).thenReturn(rootFolders);
     }
 
+    private GetParametersByPathResult setupParameterStoreResponse(String folder, String... p){
+
+        GetParametersByPathResult checkMock = mock(GetParametersByPathResult.class);
+        when(awsClientMock.getParametersByPath(
+                new GetParametersByPathRequest()
+                        .withMaxResults(1)
+                        .withPath(folder)
+                        .withWithDecryption(true)
+                        .withRecursive(true)
+        )).thenReturn(checkMock);
+
+        GetParametersByPathResult respMock = mock(GetParametersByPathResult.class);
+        when(awsClientMock.getParametersByPath(
+                new GetParametersByPathRequest()
+                        .withPath(folder)
+                        .withWithDecryption(true)
+                        .withRecursive(true)
+                        .withNextToken(null)
+        )).thenReturn(respMock);
+
+        when(respMock.getNextToken()).thenReturn(null);
+        List<Parameter> parameters = new ArrayList<>();
+        for (int i = 0; i < p.length; i += 2 )
+            parameters.add(new Parameter()
+                    .withName(p[i])
+                    .withType("String")
+                    .withValue(p[i+1]));
+        when(respMock.getParameters()).thenReturn(parameters);
+
+        return respMock;
+    }
+
+    private void setupStandardResponses() {
+        setupRootFolders("/my-app,/common");
+        setupParameterStoreResponse("/my-app",
+                "/my-app/prop/val/x", "valid value x",
+                "/my-app/prop/val/y", "valid value y"
+        );
+        setupParameterStoreResponse("/common",
+                "/common/prop/val/y", "invalid value y",
+                "/common/prop/val/z", "valid value z"
+        );
+    }
+
     @Test
-    @Ignore
     public void testParameterStoreIsEnabledWithProfileProd() {
         activateSpringProfiles("Prod");
-        setupRootFolders("/my-app,/common");
+        setupStandardResponses();
+
         awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
 
         verify(mutablePropertySourcesMock, times(1)).addFirst(any(AwsParameterStorePropertySource.class));
@@ -91,7 +128,7 @@ public class AwsParameterStoreConnectorTest
     @Test
     public void testParameterStoreIsEnabledWithProfileANY() {
         activateSpringProfiles("ANY");
-        setupRootFolders("");
+        setupStandardResponses();
         awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
 
         verify(envMock, never()).acceptsProfiles("");
@@ -99,7 +136,7 @@ public class AwsParameterStoreConnectorTest
     }
 
     @Test
-    public void testParameterStoreIsDisabledOnUnaceptedProfile() {
+    public void testParameterStoreIsDisabledOnUnacceptedProfile() {
         activateSpringProfiles("Dev");
         awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
 
@@ -109,11 +146,29 @@ public class AwsParameterStoreConnectorTest
     @Test
     public void testParameterStorePropertySourceEnvironmentPostProcessorCantBeCalledTwice() {
         activateSpringProfiles("ANY");
-        setupRootFolders("");
+        setupStandardResponses();
 
         awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
         awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
 
         verify(mutablePropertySourcesMock, times(1)).addFirst(any(AwsParameterStorePropertySource.class));
+    }
+
+    @Test
+    public void testPropertiesShouldBeDefinedInAProperWay(){
+        activateSpringProfiles("ANY");
+        setupRootFolders("/my-app,/common");
+        setupStandardResponses();
+
+        ArgumentCaptor<AwsParameterStorePropertySource> argument = ArgumentCaptor.forClass(AwsParameterStorePropertySource.class);
+
+        awsParameterStoreConnector.postProcessEnvironment(envMock, applicationMock);
+
+        Map<String, Parameter> params = new HashMap<>();
+        params.put("prop.val.x", new Parameter().withValue("valid value x").withName("/my-app/prop/val/x").withType("String"));
+        params.put("prop.val.y", new Parameter().withValue("valid value y").withName("/my-app/prop/val/y").withType("String"));
+        params.put("prop.val.z", new Parameter().withValue("valid value z").withName("/common/prop/val/z").withType("String"));
+
+        verify(mutablePropertySourcesMock).addFirst( new AwsParameterStorePropertySource( "AwsParameterStorePropertySource", params ) );
     }
 }

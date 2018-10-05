@@ -54,7 +54,7 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
 
             if (client != null) {
                 Map<String, Parameter> params = readAllProps(client, roots);
-                if (! params.isEmpty()) {
+                if ( !params.isEmpty() ) {
                     environment.getPropertySources()
                             .addFirst( new AwsParameterStorePropertySource( "AwsParameterStorePropertySource", params ) );
                     logger.info("AWS Parameter Store integration: activated ("+ params.size() +" parameters loaded)");
@@ -123,7 +123,8 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
                     .withMaxResults(1)
                     .withPath(roots[0])
                     .withWithDecryption(true)
-                    .withRecursive(true));
+                    .withRecursive(true)
+            );
 
         } catch (Exception e) {
             if (environment.acceptsProfiles("Prod")) {

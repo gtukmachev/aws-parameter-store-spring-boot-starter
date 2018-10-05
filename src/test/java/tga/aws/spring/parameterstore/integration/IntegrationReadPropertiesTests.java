@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
  * Created by grigory@clearscale.net on 9/28/2018.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class InteerationReadPropertiesTests {
+public class IntegrationReadPropertiesTests {
 
     @Mock private SpringApplication springApplication;
     @Mock private ConfigurableEnvironment environment;

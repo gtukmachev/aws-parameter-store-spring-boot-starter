@@ -27,4 +27,22 @@ public class AwsParameterStorePropertySource extends PropertySource<AwsParameter
             return null;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AwsParameterStorePropertySource)) return false;
+        if (!super.equals(o)) return false;
+
+        AwsParameterStorePropertySource that = (AwsParameterStorePropertySource) o;
+
+        return parameters != null ? parameters.equals(that.parameters) : that.parameters == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (parameters != null ? parameters.hashCode() : 0);
+        return result;
+    }
 }
