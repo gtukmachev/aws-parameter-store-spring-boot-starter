@@ -17,15 +17,13 @@ import java.util.Map;
  *      As far, this class defined in META-INF/spring.factories - Spring Boot will create an instance of this class
  *      and run them {@link #postProcessEnvironment(ConfigurableEnvironment, SpringApplication)} method automatically.
  *  </p>
- *  <br/>
+ *  <br>
  *  <h2>System properties</h2>
- *  <p>
  *      You can manage of the library behaviour using 2 system properties: <strong>psSpringProfiles</strong> and <strong>psRoots</strong>
- *      <br/> Please, make sure, you setted up these properties before your application will be started, for instance:
+ *      Please, make sure, you setted up these properties before your application will be started, for instance:
  *      <pre>
- *      {@code
  *         // the best way to setup the psSpringProfiles is:
- *         @SpringBootApplication
+ *         /@SpringBootApplication
  *         public class App {
  *             public static void main(String[] args) {
  *                 System.setProperty("psSpringProfiles","ANY"); // activated for any profile
@@ -34,31 +32,25 @@ import java.util.Map;
  *                 SpringApplication.run(App.class, args);
  *            }
  *         }
- *      }
  *      </pre>
- *  </p>
- *  <p>
- *      <strong>psSpringProfiles</strong> system property
- *      <br/>
+ *  <h3>psSpringProfiles system property</h3>
  *      List of spring profiles (comma separated). If one of these profiles is active - the AWS Property Source Connector will be activated
- *      <br/>
- *      Use <strong>ANY</strong> profile name to activate it for all profiles</p>
- *  </p>
- *  <br/>
- *  <p>
- *      <strong>psRoots</strong> system property
- *        A list of comma separated root folders inside AWS Parameter Store
- *        <br/>Example: "/app,/common"
- *        <br/>In this case, the connector will search for your properties inside /app and then (if no one found) inside /common folders of th AWS Parameter Store
- *        <br/>The symbol '/' in front of a folder name is important - see documentation of AWS Property Source service
- *        <br/>Your spring-property names will be converted to AWS Property Source keys via the following convention:
- *        <br/>ROOT_FOLDER/PROPERTY_NAME - all '.' (dots) will be replaced to '/'
- *        <br/>So, for psSpringProfiles.roots="/app,/common", and you'll request 'server.port' property, the following properties will be read from AWS:
- *        <ul>
- *          <li>/app/server/port</li>
- *          <li>/common/server/port <i>(if /app/server/port is undefined)</i></li>
- *        </ul>
- *  </p>
+ *      <br>
+ *      Use "ANY" profile name to activate it for all profiles
+
+ *  <br>
+ *  <h3>psRoots system property</h3>
+ *  A list of comma separated root folders inside AWS Parameter Store
+ *  <br>Example: "/app,/common"
+ *  <br>In this case, the connector will search for your properties inside /app and then (if no one found) inside /common folders of th AWS Parameter Store
+ *  <br>The symbol '/' in front of a folder name is important - see documentation of AWS Property Source service
+ *  <br>Your spring-property names will be converted to AWS Property Source keys via the following convention:
+ *  <br>ROOT_FOLDER/PROPERTY_NAME - all '.' (dots) will be replaced to '/'
+ *  <br>So, for psSpringProfiles.roots="/app,/common", and you'll request 'server.port' property, the following properties will be read from AWS:
+ *  <ul>
+ *    <li>/app/server/port</li>
+ *    <li>/common/server/port <i>(if /app/server/port is undefined)</i></li>
+ *  </ul>
  *
  * @see org.springframework.boot.env.EnvironmentPostProcessor
  *
