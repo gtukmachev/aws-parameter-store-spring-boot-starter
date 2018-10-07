@@ -1,7 +1,10 @@
 package tga.aws.spring.parameterstore;
 
 /**
- * Created by grigory@clearscale.net on 10/5/2018.
+ * The library starts too early (in a Spring Boot application components instantiation chain)
+ * At the start moment a logger context (slf4j / logback) will not be initialized yet,
+ * so we forced to log our messages in a standard output stream directly.
+ *
  */
 public class SystemOutLogger {
 
