@@ -5,6 +5,12 @@ import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement
 
 /**
  * Created by grigory@clearscale.net on 10/1/2018.
+ *
+ * It just a wrapper for instatiating an AWS client.
+ * This wrapper needed to allow create an AWS Mock in tests using Mockito framework.
+ * It's impossible to make the mock without this wrapper, becouse
+ * the default AWS client implementation uses static methods for a new client creation.
+ *
  */
 public class AWSParameterStoreClientBuilder {
 
