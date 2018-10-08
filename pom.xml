@@ -3,9 +3,9 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>tga.aws</groupId>
+    <groupId>com.savvymoney.v2</groupId>
     <artifactId>aws-parameter-store-spring-boot-starter</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 
     <name>AWS Parameter Store to Spring Boot Property Loader</name>
     <description>
