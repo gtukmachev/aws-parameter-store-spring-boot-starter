@@ -5,7 +5,7 @@
 
     <groupId>tga.aws</groupId>
     <artifactId>aws-parameter-store-spring-boot-starter</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <name>AWS Parameter Store to Spring Boot Property Loader</name>
     <description>
@@ -29,20 +29,6 @@
             <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
-
-    <developers>
-        <developer>
-            <name>Grigory Tukmachev</name>
-            <organization>gtukmachev</organization>
-            <organizationUrl>https://github.com/gtukmachev</organizationUrl>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:git@github.com:gtukmachev/spring-boot-starter-aws-parameter-store.git</connection>
-        <developerConnection>scm:git:git@github.com:gtukmachev/spring-boot-starter-aws-parameter-store.git</developerConnection>
-        <url>https://github.com/gtukmachev/spring-boot-starter-aws-parameter-store</url>
-    </scm>
 
     <dependencies>
 
@@ -113,12 +99,12 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>savvy-snapshots</id>
+            <url>https://maven-repo.savvymoney.com/repository/snapshots/</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>savvy-internal</id>
+            <url>https://maven-repo.savvymoney.com/repository/internal/</url>
         </repository>
     </distributionManagement>
 </project>
