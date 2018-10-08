@@ -38,7 +38,7 @@ The library was tested and worked properly with:
         public class App {
             public static void main(String[] args) {
                 System.setProperty("psSpringProfiles","ANY"); // activated for any profile
-                System.setProperty("psRoots","/myapp,/common"); // 2 root folders will be used for reading proerties (see bellow in the documentation)
+                System.setProperty("psRoots","/myapp,/common"); // 2 root folders will be used for reading properties (see bellow in the documentation)
         
                 SpringApplication.run(App.class, args);
            }
