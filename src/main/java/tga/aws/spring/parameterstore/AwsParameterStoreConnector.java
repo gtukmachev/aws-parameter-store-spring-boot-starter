@@ -161,6 +161,8 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
     private AWSSimpleSystemsManagement buildAwsClient(String[] roots, ConfigurableEnvironment environment) {
         AWSSimpleSystemsManagement client = getAwsParameterStoreClientBuilder().getClient();
 
+        if (client == null) return null;
+
         try {
             // AWS Connection checking: trying to read properties from the specified roots
             client.getParametersByPath( new GetParametersByPathRequest()

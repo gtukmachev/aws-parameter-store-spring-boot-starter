@@ -12,8 +12,17 @@ import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement
  */
 public class AWSParameterStoreClientBuilder {
 
+    static private final SystemOutLogger logger = new SystemOutLogger();
+
     public AWSSimpleSystemsManagement getClient() {
-        return AWSSimpleSystemsManagementClientBuilder.defaultClient();
+
+        try {
+            return AWSSimpleSystemsManagementClientBuilder.defaultClient();
+        } catch (Throwable ex) {
+            logger.warn("Cant build an AWS client: " + ex.getClass().getSimpleName() + "\n" + ex.getMessage());
+        }
+
+        return null;
     }
 
 }
