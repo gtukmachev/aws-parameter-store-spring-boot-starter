@@ -5,7 +5,7 @@
 
     <groupId>tga.awstools</groupId>
     <artifactId>aws-ssm-spring-boot-starter</artifactId>
-    <version>1.5.sb202-SNAPSHOT</version>
+    <version>1.5.sb215r</version>
 
     <name>AWS Parameter Store to Spring Boot Property Loader</name>
     <description>
@@ -16,7 +16,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sbs.spring.boot.version>2.0.2.RELEASE</sbs.spring.boot.version>
+        <sbs.spring.boot.version>2.1.5.RELEASE</sbs.spring.boot.version>
         <sbs.aws-java-sdk-ssm.version>1.11.416</sbs.aws-java-sdk-ssm.version>
         <sbs.slf4j.version>1.7.25</sbs.slf4j.version>
         <sbs.logback.version>1.2.3</sbs.logback.version>
@@ -76,6 +76,9 @@
     <profiles>
         <profile>
             <id>release</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
