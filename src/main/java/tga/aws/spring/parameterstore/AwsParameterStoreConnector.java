@@ -1,15 +1,16 @@
 package tga.aws.spring.parameterstore;
 
-import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
-import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest;
-import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathResult;
-import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
+import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathRequest;
+import com.amazonaws.services.simplesystemsmanagement.model.GetParametersByPathResult;
+import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
 
 /**
  *  The class will add a new PropertySource to spring boot PropertySources chain (at the beginning od the chain).
@@ -153,9 +154,14 @@ public class AwsParameterStoreConnector implements EnvironmentPostProcessor {
     }
 
     private String getSecureValue(Parameter p) {
-        String t = p.getType();
-        if (t == null) return "???";
-        return (t.startsWith("Secure") || t.contains("pass") || t.contains("priva")) ? "***" : p.getValue();
+        String type = p.getType().toLowerCase();
+        String name = p.getType();
+        if (type == null) return "???";
+        return (type.contains("secure") ||
+                name.contains("pass") ||
+                name.contains("priva") ||
+                name.contains("secure")
+            ) ? "***" : p.getValue();
     }
 
     private AWSSimpleSystemsManagement buildAwsClient(String[] roots, ConfigurableEnvironment environment) {
