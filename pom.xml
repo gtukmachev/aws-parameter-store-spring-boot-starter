@@ -3,16 +3,13 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.savvymoney.v2</groupId>
+    <groupId>tga.awstools</groupId>
     <artifactId>aws-parameter-store-spring-boot-starter</artifactId>
-    <!--<version>0.1.4-SNAPSHOT</version>-->
-    <!--<version>0.1.4.sb203</version>-->
-    <version>0.1.4.sb202</version>
+    <version>1.5.sb202-SNAPSHOT</version>
 
     <name>AWS Parameter Store to Spring Boot Property Loader</name>
     <description>
         Transparent Integration of the AWS "Parameter Store" with your Spring Boot application.
-
         Initially was based on: https://github.com/coveo/spring-boot-parameter-store-integration
     </description>
     <url>https://github.com/gtukmachev/spring-boot-parameter-store-loader</url>
@@ -66,7 +63,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -99,14 +96,4 @@
         </profile>
     </profiles>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>savvy-snapshots</id>
-            <url>https://maven-repo.savvymoney.com/repository/snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>savvy-internal</id>
-            <url>https://maven-repo.savvymoney.com/repository/internal/</url>
-        </repository>
-    </distributionManagement>
 </project>
