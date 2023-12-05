@@ -19,7 +19,7 @@
         <sbs.spring.boot.version>2.0.2.RELEASE</sbs.spring.boot.version>
         <sbs.aws-java-sdk-ssm.version>1.11.416</sbs.aws-java-sdk-ssm.version>
         <sbs.slf4j.version>1.7.25</sbs.slf4j.version>
-        <sbs.logback.version>1.2.3</sbs.logback.version>
+        <sbs.logback.version>1.2.13</sbs.logback.version>
     </properties>
 
     <licenses>
